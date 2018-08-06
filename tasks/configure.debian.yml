@@ -1,0 +1,25 @@
+---
+
+- name: Configuring NTP time synchronization daemon
+  template:
+    src: ntp.conf.j2
+    dest: /etc/ntp.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  notify: Restart NTP service
+
+- name: Ensuring NTP time synchronization daemon is running and enabled at system start.
+  service:
+    name: "{{ hm_timesynced__service_name }}"
+    state: started
+    enabled: yes
+  when: hm_timesynced__service_enabled
+
+- name: Ensuring NTP time synchronization daemon is stopped and disabled at system start.
+  service:
+    name: "{{ hm_timesynced__service_name }}"
+    state: stopped
+    enabled: no
+  when: not hm_timesynced__service_enabled

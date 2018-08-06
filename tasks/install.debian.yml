@@ -1,0 +1,6 @@
+---
+
+- name: Installing NTP time synchronization daemon
+  apt:
+    name: "{{ hm_timesynced__package_list }}"
+    state: latest

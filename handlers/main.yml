@@ -1,0 +1,6 @@
+---
+
+- name: Restart NTP service
+  service:
+    name: "{{ hm_timesynced__service_name }}"
+    state: restarted
