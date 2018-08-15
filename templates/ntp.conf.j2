@@ -18,12 +18,12 @@ filegen peerstats file peerstats type day enable
 filegen clockstats file clockstats type day enable
 
 # Define time server pool
-{%- for server in hm_timesynced__ntp_servers %}
+{% for server in hm_timesynced__ntp_servers %}
 server {{ server.name }} iburst
-{%- if 'address' in server and server.address %}
+{% if 'address' in server and server.address %}
 restrict {{ server.address }}
-{%- endif %}
-{%- endfor %}
+{% endif %}
+{% endfor %}
 
 # Access control configuration; see /usr/share/doc/ntp-doc/html/accopt.html for
 # details.  The web page <http://support.ntp.org/bin/view/Support/AccessRestrictions>
