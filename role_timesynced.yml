@@ -11,7 +11,7 @@
 #   git clone https://github.com/honzamach/ansible-role-timesynced.git honzamach.timesynced
 #
 
-- hosts: servers-timesynced
+- hosts: servers_timesynced
   remote_user: root
   roles:
     - role: honzamach.timesynced

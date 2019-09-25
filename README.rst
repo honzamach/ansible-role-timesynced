@@ -119,12 +119,12 @@ Example Playbook
 
 Example content of inventory file ``inventory``::
 
-    [servers-timesynced]
+    [servers_timesynced]
     localhost
 
 Example content of role playbook file ``playbook.yml``::
 
-    - hosts: servers-timesynced
+    - hosts: servers_timesynced
       remote_user: root
       roles:
         - role: honzamach.timesynced
