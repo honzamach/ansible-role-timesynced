@@ -74,9 +74,9 @@ Internal variables
 Usage and customization
 --------------------------------------------------------------------------------
 
-This role is (attempted to be) written according to the `Ansible best practices <https://docs.ansible.com/ansible/latest/user_guide/playbooks_best_practices.html>`__. The default implementation should fit most users,
-however you may customize it by tweaking default variables and providing custom
-templates.
+This role is (attempted to be) written according to the `Ansible best practices <https://docs.ansible.com/ansible/latest/user_guide/playbooks_best_practices.html>`__. 
+The default implementation should fit most users, however you may customize it by 
+tweaking default variables and providing custom templates.
 
 
 Variable customizations
