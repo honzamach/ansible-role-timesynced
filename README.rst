@@ -50,9 +50,9 @@ Internal variables
 
 .. envvar:: hm_timesynced__package_list
 
-	List of role-related packages, that will be installed on target system.
+    List of role-related packages, that will be installed on target system.
 
-	* *Datatype:* ``list of strings``
+    * *Datatype:* ``list of strings``
     * *Default value:* ``["ntp"]``
 
 .. envvar:: hm_timesynced__ntp_enabled
