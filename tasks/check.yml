@@ -1,0 +1,10 @@
+---
+
+- name: "ASSERTION: 'hm_timesynced__ntp_servers' is sane"
+  assert:
+    that:
+      - 'hm_timesynced__ntp_servers is defined'
+      - 'hm_timesynced__ntp_servers|length > 0'
+    msg: "Configuration value 'hm_timesynced__ntp_servers' must contain list of NTP servers"
+  tags:
+    - check
