@@ -1,6 +1,6 @@
 ---
 
-- name: Installing NTP time synchronization daemon
+- name: "Installing necessary system packages"
   apt:
-    name: "{{ hm_timesynced__package_list }}"
+    name: "{{ hm_timesynced__install_packages[ansible_os_family|lower]['apt'] }}"
     state: latest

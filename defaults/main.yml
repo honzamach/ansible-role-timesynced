@@ -1,19 +1,10 @@
 ---
 
-#
-# List of role-related packages, that will be installed on target system.
-#
-hm_timesynced__package_list:
-  - ntp
+hm_timesynced__install_packages:
+  debian:
+    apt:
+      - ntp
 
-#
-# Turn NTP time synchronization on/off and also enable/disable NTP daemon at startup
-#
-hm_timesynced__service_enabled: true
-
-#
-# List of default NTP servers
-#
 hm_timesynced__ntp_servers:
   - { name: "server 0.debian.pool.ntp.org" }
   - { name: "server 1.debian.pool.ntp.org" }

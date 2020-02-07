@@ -3,97 +3,31 @@
 Role **timesynced**
 ================================================================================
 
-Ansible role for enabling time synchronization via NTP service.
-
 * `Ansible Galaxy page <https://galaxy.ansible.com/honzamach/timesynced>`__
 * `GitHub repository <https://github.com/honzamach/ansible-role-timesynced>`__
 * `Travis CI page <https://travis-ci.org/honzamach/ansible-role-timesynced>`__
 
-
-Description
---------------------------------------------------------------------------------
-
-
-Main purpose of this role is to provide time synchronization feature. It takes
-care of following tasks:
+Main purpose of this role is to provide time synchronization feature via NTP service.
+It takes care of following tasks:
 
 * Installation of all necessary system packages.
 * Management of the NTP service configuration file.
 * Turning the service on/off and enabling/disabling service after startup.
 
+**Table of Contents:**
 
-Requirements
---------------------------------------------------------------------------------
+* :ref:`section-role-timesynced-installation`
+* :ref:`section-role-timesynced-dependencies`
+* :ref:`section-role-timesynced-usage`
+* :ref:`section-role-timesynced-variables`
+* :ref:`section-role-timesynced-files`
+* :ref:`section-role-timesynced-author`
 
-This role does not have any special requirements.
-
-
-Dependencies
---------------------------------------------------------------------------------
-
-This role is not dependent on any other role.
-
-No other roles have direct dependency on this role.
+This role is part of the `MSMS <https://github.com/honzamach/msms>`__ package.
+Some common features are documented in its :ref:`manual <section-manual>`.
 
 
-Managed files
---------------------------------------------------------------------------------
-
-This role directly manages content of following files:
-
-* ``/etc/ntp.conf``
-
-
-Internal variables
---------------------------------------------------------------------------------
-
-
-.. envvar:: hm_timesynced__package_list
-
-    List of role-related packages, that will be installed on target system.
-
-    * *Datatype:* ``list of strings``
-    * *Default value:* ``["ntp"]``
-
-.. envvar:: hm_timesynced__ntp_enabled
-
-    Turn NTP time synchronization on/off and also enable/disable NTP daemon at startup.
-
-    * *Datatype:* ``boolean``
-    * *Default value:* ``true``
-
-.. envvar:: hm_timesynced__ntp_servers
-
-    List of default NTP servers. The list should contain objects with *name* and
-    *address* attributes.
-
-    * *Datatype:* ``list of dictionaries``
-    * *Default value:* (please see YAML file ``defaults/main.yml``)
-
-
-Usage and customization
---------------------------------------------------------------------------------
-
-This role is (attempted to be) written according to the `Ansible best practices <https://docs.ansible.com/ansible/latest/user_guide/playbooks_best_practices.html>`__. 
-The default implementation should fit most users, however you may customize it by 
-tweaking default variables and providing custom templates.
-
-
-Variable customizations
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Most of the usefull variables are defined in ``defaults/main.yml`` file, so they
-can be easily overridden almost from `anywhere <https://docs.ansible.com/ansible/latest/user_guide/playbooks_variables.html#variable-precedence-where-should-i-put-a-variable>`__.
-
-
-Template customizations
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-This roles uses *with_first_found* mechanism for all of its templates. If you do
-not like anything about built-in template files you may provide your own custom
-templates. For now please see the role tasks for list of all checked paths for
-each of the template files.
-
+.. _section-role-timesynced-installation:
 
 Installation
 --------------------------------------------------------------------------------
@@ -114,15 +48,27 @@ Currently the advantage of using direct Git cloning is the ability to easily upd
 the role when new version comes out.
 
 
-Example Playbook
+.. _section-role-timesynced-dependencies:
+
+Dependencies
+--------------------------------------------------------------------------------
+
+This role is not dependent on any other role.
+
+No other roles have direct dependency on this role.
+
+
+.. _section-role-timesynced-usage:
+
+Usage
 --------------------------------------------------------------------------------
 
 Example content of inventory file ``inventory``::
 
     [servers_timesynced]
-    localhost
+    your-server
 
-Example content of role playbook file ``playbook.yml``::
+Example content of role playbook file ``role_playbook.yml``::
 
     - hosts: servers_timesynced
       remote_user: root
@@ -133,16 +79,96 @@ Example content of role playbook file ``playbook.yml``::
 
 Example usage::
 
-    ansible-playbook -i inventory playbook.yml
+    # Run everything:
+    ansible-playbook --ask-vault-pass --inventory inventory role_playbook.yml
+
+It is recommended to follow these configuration principles:
+
+* Create/edit file ``inventory/group_vars/all/vars.yml`` and within define some sensible
+  defaults for all your managed servers::
+
+        # You are probably using same NTP time servers for all your managed servers.
+        hm_timesynced__ntp_servers:
+          - { name: "tak6.cesnet.cz", address: "2001:718:1:101::144:238"}
+          - { name: "tik.cesnet.cz",  address: "195.113.144.201"}
+          - { name: "tak.cesnet.cz",  address: "195.113.144.238"}
+
+* Use files ``inventory/host_vars/[your-server]/vars.yml`` to customize settings
+  for particular servers. Please see section :ref:`section-role-timesynced-variables`
+  for all available options.
 
 
-License
+.. _section-role-timesynced-variables:
+
+Configuration variables
 --------------------------------------------------------------------------------
 
-MIT
+
+Internal role variables
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. envvar:: hm_timesynced__install_packages
+
+    List of packages defined separately for each linux distribution and package manager,
+    that MUST be present on target system. Any package on this list will be installed on
+    target host. This role currently recognizes only ``apt`` for ``debian``.
+
+    * *Datatype:* ``dict``
+    * *Default:* (please see YAML file ``defaults/main.yml``)
+    * *Example:*
+
+    .. code-block:: yaml
+
+        hm_timesynced__install_packages:
+          debian:
+            apt:
+              - ntp
+              - ...
+
+.. envvar:: hm_timesynced__ntp_servers
+
+    List of default NTP servers. The list should contain objects with *name* and
+    optionally *address* attributes.
+
+    * *Datatype:* ``list of dictionaries``
+    * *Default:* (please see YAML file ``defaults/main.yml``)
+    * *Example:*
+
+    .. code-block:: yaml
+
+        hm_timesynced__ntp_servers:
+          - { name: "server 0.debian.pool.ntp.org" }
+          - { name: "tik.cesnet.cz",  address: "195.113.144.201"}
 
 
-Author Information
+Built-in Ansible variables
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+:envvar:`ansible_lsb['codename']`
+
+    Linux distribution codename. It is used for :ref:`template customizations <section-overview-role-customize-templates>`.
+
+
+.. _section-role-timesynced-files:
+
+Managed files
 --------------------------------------------------------------------------------
 
-Honza Mach <honza.mach.ml@gmail.com>
+.. note::
+
+    This role supports the :ref:`template customization <section-overview-role-customize-templates>` feature.
+
+This role manages content of following files on target system:
+
+* ``/etc/ntp.conf`` *[TEMPLATE]*
+
+
+.. _section-role-timesynced-author:
+
+Author and license
+--------------------------------------------------------------------------------
+
+| *Copyright:* (C) since 2019 Honza Mach <honza.mach.ml@gmail.com>
+| *Author:* Honza Mach <honza.mach.ml@gmail.com>
+| Use of this role is governed by the MIT license, see LICENSE file.
+|
