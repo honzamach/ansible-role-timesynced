@@ -65,6 +65,9 @@ Usage
 
 Example content of inventory file ``inventory``::
 
+    [servers]
+    your-server
+
     [servers_timesynced]
     your-server
 
@@ -161,6 +164,14 @@ Managed files
 This role manages content of following files on target system:
 
 * ``/etc/ntp.conf`` *[TEMPLATE]*
+
+  Customizable with following templates::
+
+    ``inventory/host_files/{{ inventory_hostname }}/honzamach.timesynced/ntp.conf.j2``
+    ``inventory/group_files/servers_{{ msms_server_type }}/honzamach.timesynced/ntp.conf.{{ ansible_lsb['codename'] }}.j2``
+    ``inventory/group_files/servers_{{ msms_server_type }}/honzamach.timesynced/ntp.conf.j2``
+    ``inventory/group_files/servers/honzamach.timesynced/ntp.conf.{{ ansible_lsb['codename'] }}.j2``
+    ``inventory/group_files/servers/honzamach.timesynced/ntp.conf.j2``
 
 
 .. _section-role-timesynced-author:
